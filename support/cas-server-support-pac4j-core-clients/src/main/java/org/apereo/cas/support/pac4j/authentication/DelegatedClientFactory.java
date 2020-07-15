@@ -1,13 +1,10 @@
 package org.apereo.cas.support.pac4j.authentication;
 
-import org.apereo.cas.authentication.principal.ClientCustomPropertyConstants;
-import org.apereo.cas.configuration.CasConfigurationProperties;
-import org.apereo.cas.configuration.model.support.pac4j.Pac4jBaseClientProperties;
-import org.apereo.cas.configuration.model.support.pac4j.oidc.BasePac4jOidcClientProperties;
-import org.apereo.cas.configuration.model.support.pac4j.oidc.Pac4jOidcClientProperties;
-import org.apereo.cas.configuration.model.support.pac4j.saml.Pac4jSamlClientProperties;
-import org.apereo.cas.configuration.support.Beans;
-import org.apereo.cas.util.RandomUtils;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import com.github.scribejava.core.model.Verb;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -18,6 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apereo.cas.authentication.principal.ClientCustomPropertyConstants;
+import org.apereo.cas.configuration.CasConfigurationProperties;
+import org.apereo.cas.configuration.model.support.pac4j.Pac4jBaseClientProperties;
+import org.apereo.cas.configuration.model.support.pac4j.oidc.BasePac4jOidcClientProperties;
+import org.apereo.cas.configuration.model.support.pac4j.oidc.Pac4jOidcClientProperties;
+import org.apereo.cas.configuration.model.support.pac4j.saml.Pac4jSamlClientProperties;
+import org.apereo.cas.configuration.support.Beans;
+import org.apereo.cas.util.RandomUtils;
 import org.pac4j.cas.client.CasClient;
 import org.pac4j.cas.config.CasConfiguration;
 import org.pac4j.cas.config.CasProtocol;
@@ -30,6 +35,7 @@ import org.pac4j.oauth.client.FoursquareClient;
 import org.pac4j.oauth.client.GenericOAuth20Client;
 import org.pac4j.oauth.client.GitHubClient;
 import org.pac4j.oauth.client.Google2Client;
+import org.pac4j.oauth.client.GovBrClient;
 import org.pac4j.oauth.client.HiOrgServerClient;
 import org.pac4j.oauth.client.LinkedIn2Client;
 import org.pac4j.oauth.client.OrcidClient;
@@ -49,12 +55,6 @@ import org.pac4j.saml.client.SAML2Client;
 import org.pac4j.saml.config.SAML2Configuration;
 import org.pac4j.saml.metadata.SAML2ServiceProvicerRequestedAttribute;
 import org.pac4j.saml.store.SAMLMessageStoreFactory;
-
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * This is {@link DelegatedClientFactory}.
@@ -144,6 +144,23 @@ public class DelegatedClientFactory {
         val db = pac4jProperties.getOrcid();
         if (db.isEnabled() && StringUtils.isNotBlank(db.getId()) && StringUtils.isNotBlank(db.getSecret())) {
             val client = new OrcidClient(db.getId(), db.getSecret());
+            configureClient(client, db);
+
+            LOGGER.debug("Created client [{}] with identifier [{}]", client.getName(), client.getKey());
+            properties.add(client);
+        }
+    }
+
+    /**
+     * Configure GovBr client.
+     *
+     * @param properties the properties
+     */
+    protected void configureGovBrClient(final Collection<IndirectClient> properties) {
+        val pac4jProperties = casProperties.getAuthn().getPac4j();
+        val db = pac4jProperties.getGovBr();
+        if (db.isEnabled() && StringUtils.isNotBlank(db.getId()) && StringUtils.isNotBlank(db.getSecret())) {
+            val client = new GovBrClient(db.getId(), db.getSecret());
             configureClient(client, db);
 
             LOGGER.debug("Created client [{}] with identifier [{}]", client.getName(), client.getKey());

@@ -99,6 +99,11 @@ public class Pac4jDelegatedAuthenticationProperties implements Serializable {
     private Orcid orcid = new Orcid();
 
     /**
+     * Settings that deal with having GovBr as an external delegated-to authentication provider.
+     */
+    private GovBr govBr = new GovBr();
+
+    /**
      * Settings that deal with having Github as an external delegated-to authentication provider.
      */
     private Github github = new Github();
@@ -324,6 +329,18 @@ public class Pac4jDelegatedAuthenticationProperties implements Serializable {
 
         public Orcid() {
             setClientName("ORCID");
+        }
+    }
+
+    @RequiresModule(name = "cas-server-support-pac4j-webflow")
+    @Getter
+    @Setter
+    public static class GovBr extends Pac4jIdentifiableClientProperties {
+
+        private static final long serialVersionUID = 1337923364401817796L;
+
+        public GovBr() {
+            setClientName("GovBr");
         }
     }
 

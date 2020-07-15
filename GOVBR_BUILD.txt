@@ -1,0 +1,6 @@
+### cas-server-core-api-configuration-model
+gradlew cas:api:cas-server-core-api-configuration-model clean build -x test -x javadoc -x check
+
+
+### cas-server-support-pac4j-core-clients
+gradlew cas:support:cas-server-support-pac4j-core-clients clean build -x test -x javadoc -x check
