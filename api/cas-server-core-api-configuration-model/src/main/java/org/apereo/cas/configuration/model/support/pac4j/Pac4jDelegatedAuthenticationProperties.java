@@ -328,7 +328,7 @@ public class Pac4jDelegatedAuthenticationProperties implements Serializable {
         private static final long serialVersionUID = 1337923364401817796L;
 
         public Orcid() {
-            setClientName("ORCID");
+            setClientName("ORCiD");
         }
     }
 
@@ -340,7 +340,7 @@ public class Pac4jDelegatedAuthenticationProperties implements Serializable {
         private static final long serialVersionUID = 1337923364401817796L;
 
         public GovBr() {
-            setClientName("GovBr");
+            setClientName("gov.br");
         }
     }
 

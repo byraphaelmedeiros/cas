@@ -654,6 +654,7 @@ public class DelegatedClientFactory {
         configureWordPressClient(clients);
         configureBitBucketClient(clients);
         configureOrcidClient(clients);
+        configureGovBrClient(clients);
         configureHiOrgServerClient(clients);
 
         return clients;
